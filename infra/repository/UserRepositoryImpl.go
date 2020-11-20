@@ -17,11 +17,11 @@ func Add(user models.User) {
 }
 
 // FindByEmail returns user by email
-func FindByEmail(email string) models.User {
+func FindByEmail(email string) (models.User, error) {
 	for i := 0; i < len(userRepository); i++ {
 		if userRepository[i].Email == email {
-			return userRepository[i]
+			return userRepository[i], nil
 		}
 	}
-	return models.User{}
+	return models.User{}, nil
 }
