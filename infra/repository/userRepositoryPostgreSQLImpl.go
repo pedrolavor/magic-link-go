@@ -1,7 +1,6 @@
 package repositoryimpl
 
 import (
-	"database/sql"
 	"errors"
 	"log"
 	"magic-link/domain/models"
@@ -55,18 +54,4 @@ func (r *UserRepositoryPostgreSQLImpl) FindByEmail(email string) (models.User, e
 	defer db.Close()
 
 	return user, nil
-}
-
-func getConnection() *sql.DB {
-
-	connection := "host=your_host user=your_user password=your_password dbname=your_db sslmode=disable"
-	db, err := sql.Open("postgres", connection)
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	log.Println("Connection to database successfully...")
-
-	return db
 }

@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"log"
 	"magic-link/application/services"
+	"magic-link/domain/models"
 	"magic-link/domain/repository"
 	"net/http"
 )
 
 // LoginHandler handles login requests
-func LoginHandler(res http.ResponseWriter, req *http.Request, userRepository repository.UserRepository) {
+func LoginHandler(res http.ResponseWriter, req *http.Request, userRepository repository.UserRepository, tokenRepository repository.TokenRepository) {
 	method := req.Method
 
 	if method == "POST" {
@@ -25,7 +26,15 @@ func LoginHandler(res http.ResponseWriter, req *http.Request, userRepository rep
 			return
 		}
 
-		err = services.SendToken(user)
+		token, err := services.SendToken(user)
+
+		novoToken := models.Token{
+			Token: token,
+			Email: user.Email,
+			Valid: true,
+		}
+
+		tokenRepository.Save(novoToken)
 
 		if err != nil {
 			log.Println(err)

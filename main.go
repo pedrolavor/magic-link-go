@@ -13,7 +13,8 @@ const port = ":8080"
 func main() {
 
 	userRepository := &repositoryimpl.UserRepositoryPostgreSQLImpl{}
-	loadRoutes(userRepository)
+	tokenRepository := &repositoryimpl.TokenRepositoryPostgreSQLImpl{}
+	loadRoutes(userRepository, tokenRepository)
 
 	log.Printf("Server running on port %s...", port)
 	err := http.ListenAndServe(port, nil)
@@ -24,13 +25,13 @@ func main() {
 
 }
 
-func loadRoutes(userRepository repository.UserRepository) {
+func loadRoutes(userRepository repository.UserRepository, tokenRepository repository.TokenRepository) {
 
 	http.HandleFunc("/login", func(res http.ResponseWriter, req *http.Request) {
-		controllers.LoginHandler(res, req, userRepository)
+		controllers.LoginHandler(res, req, userRepository, tokenRepository)
 	})
 
 	http.HandleFunc("/token", func(res http.ResponseWriter, req *http.Request) {
-		controllers.TokenHandler(res, req, userRepository)
+		controllers.TokenHandler(res, req, tokenRepository)
 	})
 }
